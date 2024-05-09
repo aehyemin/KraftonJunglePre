@@ -19,6 +19,8 @@
         integrity="sha384-Piv4xVNRyMGpqkS2by6br4gNJ7DXjqk09RmUpJ8jgGtD7zP9yug3goQfGII0yAns"
         crossorigin="anonymous"></script>
 
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    
 
    <!-- 폰트 -->
    <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -30,8 +32,6 @@
 
 
     <style>
-
-
         *{
         font-family: "Dongle", sans-serif; 
           }
@@ -57,6 +57,18 @@
             font-weight: bold;
         }
     </style>
+
+    <script>
+        function hey(){
+            alert('헤이!');
+        }
+
+        function hello(){
+            console.log('hello');
+        }
+    </script>
+
+
 </head>
 
 
@@ -81,13 +93,17 @@
         <div class="form-group">
             <label for="exampleInputEmail1">기사 URL</label>
             <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+            <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
         </div>
         <div class="form-group">
-            <label for="exampleInputPassword1">간단 코멘트</label>
+            <label for="exampleInputPassword1">Password</label>
             <input type="password" class="form-control" id="exampleInputPassword1">
         </div>
-
-            <button type="submit" class="btn btn-primary">기사저장</button>
+            <div class="form-group form-check">
+            <input type="checkbox" class="form-check-input" id="exampleCheck1">
+            <label class="form-check-label" for="exampleCheck1">Check me out</label>
+            </div>
+            <button onclick="hey()" type="submit" class="btn btn-primary">기사저장</button>
         </div>
 
 
