@@ -1,3 +1,7 @@
+#container > div.RankingPage_ranking_wrap__GB855 > ol > li:nth-child(54) > a > div.Thumbnail_image_wrap__KWHAU.Thumbnail_type_m__fS_OX > div > div > img
+
+
+
 import requests
 from bs4 import BeautifulSoup
 #import bs4.BeautifulSoup
@@ -12,15 +16,15 @@ data = requests.get('https://serieson.naver.com/v3/broadcasting/ranking/realtime
 soup = BeautifulSoup(data.text, 'html.parser')
 
 
-dramas = soup.select('#container > div.RankingPage_ranking_wrap__GB855')
+dramas = soup.select('#container > div.RankingPage_ranking_wrap__GB855 > ol > li:nth-child(2) > a > div.Thumbnail_image_wrap__KWHAU.Thumbnail_type_m__fS_OX')
+
 print(dramas)
+
 for drama in dramas:
-# get an attribute from a tag
-    tag_element = drama.select('') 
+    tag_element = drama.select('*>src') 
     for i in range(len(tag_element)):
-        print(tag_element)
-        # name = tag_element[i].get('alt')
-        # print(name)
+        name = tag_element[i].get('src')
+ 
 
 
 # for drama in dramas:
