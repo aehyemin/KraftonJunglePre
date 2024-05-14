@@ -1,7 +1,9 @@
 from flask import Flask, render_template, jsonify, request
 import requests
 from bs4 import BeautifulSoup
-from pymongo import MongoClient  # pymongo를 임포트 하기(패키지 인스톨 먼저 해야겠죠?)
+from pymongo import MongoClient
+client = MongoClient('mongodb://sungin:jjang@3.39.193.123',27017)
+db = client.dbsparta
 
 app = Flask(__name__)
 

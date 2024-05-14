@@ -11,7 +11,7 @@ import sys
 app = Flask(__name__)
 
 client = MongoClient('localhost', 27017)
-db = client.dbjungle
+db = client.dbjooongle
 
 
 #####################################################################################
@@ -66,7 +66,8 @@ def show_movies():
     #      개봉일 순서 정렬처럼 여러 기준으로 순서대로 정렬해야되는 경우 sort([('A', 1), ('B', 1)]) 처럼 줄 수 있음.
     #    TODO: 다음 코드에서 likes로 정렬이 정상동작하도록 직접 수정해보세요!!!
     if sortMode == 'likes':
-        movies = list(db.movies.find({'trashed': False}, {}))
+        movies = list(db.movies.find({'trashed': False}, {'_id':False}).sort('likes',-1))
+        
     else:
         return jsonify({'result': 'failure'})
 
@@ -78,23 +79,33 @@ def show_movies():
 @app.route('/api/like', methods=['POST'])
 def like_movie():
     # 1. movies 목록에서 find_one으로 영화 하나를 찾습니다.
+    title_receive = request.form['title_give']
     #    TODO: 영화 하나만 찾도록 다음 코드를 직접 수정해보세요!!!
-    movie = db.movies.find_one({})
+    first_like = db.movies.find_one({'title':title_receive})
+    print(first_like)
+    new_likes= first_like['likes'] +1
 
     # 2. movie의 like 에 1을 더해준 new_like 변수를 만듭니다.
-    new_likes = movie['likes'] + 1
 
     # 3. movies 목록에서 id 가 매칭되는 영화의 like 를 new_like로 변경합니다.
     #    참고: '$set' 활용하기!
     #    TODO: 영화 하나의 likes값이 변경되도록 다음 코드를 직접 수정해보세요!!!
-    result = db.movies.update_one({}, {'$set': {'likes': new_likes}})
+    result = db.movies.update_one({'title':title_receive}, {'$set': {'likes': new_likes}})
+    return jsonify({'result': 'success'})
+
 
     # 4. 하나의 영화만 영향을 받아야 하므로 result.updated_count 가 1이면  result = success 를 보냄
-    if result.modified_count == 1:
-        return jsonify({'result': 'success'})
-    else:
-        return jsonify({'result': 'failure'})
+    # if result.modified_count == 1:
+    #     return jsonify({'result': 'success'})
+    # else:
+    #     return jsonify({'result': 'failure'})
 
+@app.route('/api/delete', methods=['POST'])
+def trash_movie():
+    title_receive = request.form['title_give']
+    db.movies.delete_one({'title': title_receive})
+    
+    return jsonify({'msg': 'delete 연결되었습니다!'})
 
 if __name__ == '__main__':
     print(sys.executable)

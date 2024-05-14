@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css"
+            crossorigin="anonymous">
+
+	<!-- JS -->
+        <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
+            crossorigin="anonymous"></script>
+
+    <!-- 구글폰트 -->
+        <link href="https://fonts.googleapis.com/css?family=Stylish&display=swap" rel="stylesheet">
+
+
+    <title>나홀로메모장</title>
+
+    <style>
+       * {
+        font-family: 'Jua', sans-serif;
+        }
+
+        .wrap{
+            width:900px;
+            margin:auto;
+        }
+
+        #card-box{
+            width:500px;
+        }
+
+        .card{
+            width:300px;
+            margin : 10px 10px 10px 10px;
+        }
+
+        .posting-box{
+            width:500px;
+        }
+
+    </style>
+    <script>           
+    
+     $(document).ready(function () {
+            $("#cards-box").html("");
+            show();
+            });
+
+        function post() {
+            let title = $("#memo-title").val();
+            let content = $("#memo-content").val();
+        
+            $.ajax({
+                type: 'POST',
+                url: '/memo',
+                data: {title_give:title, content_give:content},
+                success: function (response) {
+                if (response['result'] == 'success') {
+                    alert("성공");
+                    window.location.reload();
+                    } else {
+                        alert('서버오류')
+                    }
+                }
+            })
+        }
+
+
+
+
+
+        function show() {
+        $.ajax({
+                type: "GET",
+                url: "/memo",
+                data: {},
+                success: function (response) {
+                    let memos = response['memos'];
+                    console.log(memos);
+                    for(let i=0; i<memos.length; i++){
+                        makeCard(memos[i]['title'],memos[i]['content'],memos[i]['likes'])
+                    }      
+                }
+            })
+        }
+                    function makeCard(title, content, likes) {
+                        let tempHtml = `<div class="card">
+                                <div class="card-body">
+                                <a class="card-title">${title}</a>
+                                <p class="card-text">${content}</p>
+                                <p class ="card-likes">${likes}</p>
+                                <button class="edit-button" type="submit">수정</button>
+                                <button class="delete-button" type="submit">삭제</button>
+                                <button class="save-button">저장</button>
+                                <button class="link-likes">좋아요</button>`;
+                            $("#cards-box").append(tempHtml);
+
+                        }
+
+
+
+        function like() {
+            $.ajax({
+                type: 'POST',
+                url: '/memo',
+                data: {title_give:title},
+                success: function (response) {
+                    alert(response['msg']);
+                    window.location.reload()
+                }
+            });
+        }
+
+
+        function delete() {
+            $.ajax({
+                type: 'POST',
+                url: '/memo',
+                data: {title_give:title},
+                success: function (response) {
+                    alert(response['msg']);
+                }
+            });
+        }
+    </script>
+
+</head>
+
+<body>
+    <div class="wrap">
+        <div class="jumbotron">
+            <h1 class="display-4">나홀로메모장 ver2.0</h1>
+            <div class="posting-box">
+                <div class="form-group">
+                <label for="exampleInputEmail1"></label>
+                <input type="title" id="memo-title" class="form-control" placeholder="제목을 입력하세요">
+                </div>
+                <div class="form-group">
+                <label for="exampleInputPassword1"></label>
+                <textarea class="form-control" id="memo-content" rows="3" placeholder="내용을 입력하세요" ></textarea>
+            </div>
+            <button class="btn btn-primary" onclick="post()">저장하기</button>
+        </div>
+    </div>
+
+    <div id="cards-box" class="card-list">
+
+            <div class="card">
+                <div class="card-body">
+                    <p class="card-title">첫번째 제목</a>
+                    <p class="card-text">첫번째 내용 </p>
+                    <p class ="card-likes"> 좋아요 수</p>
+
+                     <button class="edit-button" type="submit">수정</button>
+                     <button class="delete-button" onclick="delete()"type="submit">삭제</button>
+                     <button class="save-button">저장</button>
+                     <button class="link-likes" onclick="like()">좋아요</button>
+
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+                    <p class="card-title">두번째 제목</a>
+                    <p class="card-text">두번째 내용</p>
+                    <p class ="card-likes">좋아요 수 </p>
+
+                     <button class="edit-button" type="submit">수정</button>
+                     <button class="delete-button" onclick="delete()" type="submit">삭제</button>
+                     <button class="save-button">저장</button>
+                     <button class="link-likes" onclick="like()">좋아요</button>
+                </div>
+            </div> 
+    </div>
+</div>
+</body>
+</html>
