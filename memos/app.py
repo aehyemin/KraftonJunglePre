@@ -37,7 +37,7 @@ app.json = CustomJSONProvider(app)
 #html 보여주기
 @app.route('/')
 def home():
-    return render_template('index1.html')
+    return render_template('index.html')
 
 #API
 
