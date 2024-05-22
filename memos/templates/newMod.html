@@ -39,43 +39,75 @@ body는 본문영역(자바스크립트 영역) -->
             margin:auto;
         }
 
-        #card-box{
-            width:500px;
-        }
 
-        .card{
-            width:300px;
-            margin : 10px 10px 10px 10px;
-        }
-
-        .posting-box{
-            width:500px;
+        .form-group{
+            width:400px;
         }
     </style>
 
     <script>
-
     $(document).ready(function () {
-        $("#cards-box").html("");
-        show();
-        });
+            $("#cards-box").html("");
+            show();
+            });
 
 
         // 입력된 데이터 읽기
         function readMemo(){
+            // id 값이 memo-title 인 곳을 가리키고, val() 로 값을 가져온다
+            let title = $('#memo-title').val();
+            let content = $('#memo-content').val()
             $.ajax({
-                type: 'GET',
+                type: 'POST',
                 url: '/memo/read/',
-                data:{},
-                success:function(response){
-                    alert(response['msg': 'read '])
+                data:{title_give:title, content_give:content},
+                success: function (response) {
+                if (response['result'] == 'success') {
+                    alert("메모 불러오기 성공");
+                    window.location.reload();
+                    } else {
+                        alert('서버오류')
+                    }
                 }
-
             })
         }
 
         // 카드형식만들기
-        function addMemo(){}
+        function show(){
+            $.ajax({
+                type: 'GET',
+                url : '/memo/read/',
+                data :{},
+                success:function(response){
+                    let memos = response['memos'];
+                    console.log(memos)
+                    for(let i=0; i<memos.length; i++){
+                        makeCard(
+                            memos[i]['title'],
+                            memos[i]['content'],
+                            memos[i]['likes'],
+                            memos[i]['_id'])
+                    }
+                }
+            })
+        }
+
+
+
+            function makeCard(title, content, likes, memo_id){
+                let tempHtml = 
+                `<div class="card">
+        <div class="card-body">
+        <!-- 원래 제목과 내용을 보여주는 영역 -->
+        <div id="original-content-${memo_id}">
+            <p class="card-title" id="original-title-${memo_id}">${title}</p>
+            <p class="card-text" id="original-content-${memo_id}">${content}</p>
+        </div>`
+            
+
+
+            $("#cards-box").append(tempHtml);
+        }
 
         function deleteMemo(){}
 
@@ -92,19 +124,42 @@ body는 본문영역(자바스크립트 영역) -->
 <body>
 <div class="wrap">
     <div class="jumbotron">
-        <h1 class="titleName">나만의 메모장 2.0</h1>
         <div class="posting-box">
+        <h1 class="titleName">나만의 메모장 2.0</h1>
             <div class="form-group">
                 <label for="제목"></label>
-                <input type ='title' id="memo-itle" placeholder="제목을 입력하세요">
+                <input type ='title' id="memo-title" placeholder="제목을 입력하세요">
 
             <div class="form-group">
                 <label for="내용"></label>
-                <textarea class="form-control" id="Textarea" rows="3" placeholder="내용을 입력하세쵸"></textarea> 
+                <textarea class="form-control" id="memo-content" rows="3" placeholder="내용을 입력하세쵸"></textarea> 
             </div>
-        <button class="btn btn-primary" onclick="loadMemo()">저장하기</button>
-</div>
+            <button class="btn btn-primary" onclick="readMemo()">저장하기</button>
+        </div>
     </div>   
 </div>
+
+
+    <div id="cards-box" class="card-list">
+
+            <div class="card">
+                <div class="card-body">
+                    <p class="card-title">첫번째 제목</a>
+                    <p class="card-text">첫번째 내용 </p>
+                    <p class ="card-likes"> 좋아요 수</p>
+
+                     <button class="edit-button" type="submit">수정</button>
+                     <button class="delete-button"type="submit">삭제</button>
+
+                     <button class="like-button" type="submit">좋아요</button>
+
+                </div>
+            </div>
+
+
+
+
+
+
 </body>
 </html>
