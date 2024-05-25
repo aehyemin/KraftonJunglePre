@@ -65,15 +65,24 @@ def add_memo():
 
 
 #데이터 삭제
-@app.route('/memo/delte/',methods=['POST'])
+@app.route('/memo/delete/',methods=['POST'])
 def delete_memo():
-    return
+    memo_id = request.form['memo_id']
+    db.memos.delete_one({'_id':ObjectId(memo_id)})
+    return jsonify({'result':'success', 'msg':'삭제성공'})
 
 #데이터 좋아요
 @app.route('/memo/like/', methods=['POST'])
 def like_memo():
-    return
+    memo_id = request.form['memo_id']
 
+    target_star = db.memos.find_one({'_id':ObjectId(memo_id)})
+    current_likes = target_star['likes']
+    new_likes = current_likes + 1
+
+    db.memos.update_one({'_id':ObjectId(memo_id)}, {'$set':{'likes':new_likes}})
+    return jsonify({'result':'success'})
+ 
 #데이터 수정
 @app.route('/memo/update/', methods=['POST'])
 def update_memo():
@@ -81,4 +90,4 @@ def update_memo():
 
 
 if __name__ == '__main__':  
-   app.run('0.0.0.0',port=5000,debug=True)
+   app.run('0.0.0.0',port=5001,debug=True)

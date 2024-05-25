@@ -97,21 +97,44 @@ body는 본문영역(자바스크립트 영역) -->
             function makeCard(title, content, likes, memo_id){
                 let tempHtml = 
                 `<div class="card">
-        <div class="card-body">
-        <!-- 원래 제목과 내용을 보여주는 영역 -->
-        <div id="original-content-${memo_id}">
-            <p class="card-title" id="original-title-${memo_id}">${title}</p>
-            <p class="card-text" id="original-content-${memo_id}">${content}</p>
-        </div>`
+                <div class="card-body" id='cards-box'>
+                <!-- 원래 제목과 내용을 보여주는 영역 -->
+                <div id="original-memo-${memo_id}">
+                <p class="card-title" id="title-${memo_id}">${title}</p>
+                <p class="card-text" id="content-${memo_id}">${content}</p>
+                <p> 따봉: <span class="likes">${likes}</span></p>
+                <button class="delete-button" type="submit" onclick="deleteMemo('${memo_id}')">삭제</button>
+                <button class="like-button" type="submit" onclick="likeMemo('${memo_id}')">좋음</button>
+                </div>`
             
 
 
             $("#cards-box").append(tempHtml);
         }
 
-        function deleteMemo(){}
+        function deleteMemo(memo_id){
+            $.ajax({
+                type: 'POST',
+                url: '/memo/delete',
+                data: {memo_id:memo_id},
+                success:function(response){
+                    alert('메모가 삭제 되었유');
+                    window.location.reload()
+                }
+            });
+        }
 
-        function likeMemo(){}
+        function likeMemo(memo_id){
+            $.ajax({
+                type:'POST',
+                url:'/memo/like',
+                data:{memo_id:memo_id},
+                success:function(response){
+                    alert('좋아요 추가 완료');
+                    window.location.reload()
+                }
+            })
+        }
 
         function editMemo(){}
 
@@ -142,7 +165,7 @@ body는 본문영역(자바스크립트 영역) -->
 
     <div id="cards-box" class="card-list">
 
-            <div class="card">
+            <!-- <div class="card">
                 <div class="card-body">
                     <p class="card-title">첫번째 제목</a>
                     <p class="card-text">첫번째 내용 </p>
@@ -153,9 +176,9 @@ body는 본문영역(자바스크립트 영역) -->
 
                      <button class="like-button" type="submit">좋아요</button>
 
-                </div>
+                </div> -->
             </div>
-
+ 
 
 
 
