@@ -9,8 +9,8 @@ import sys
 
 app = Flask(__name__)
 
-
-client = MongoClient('mongodb://sungin:jjang@3.39.193.123',27017)
+client = MongoClient('localhost',27017)
+# client = MongoClient('mongodb://sungin:jjang@3.39.193.123',27017)
 db = client.dbjungle
 
 
@@ -41,7 +41,7 @@ def internal_server_error(error):
 # home 
 @app.route('/')
 def home():
-    return render_template('newMod.html')
+    return render_template('newVer.html')
 
 
 #데이터 조회
